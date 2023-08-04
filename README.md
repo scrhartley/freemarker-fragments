@@ -73,6 +73,24 @@ Perhaps kebab-case to upper-camel-case translation would also be useful?
 <#assign FRAGMENT = FRAGMENT!?replace('-', ' ')?capitalize?replace(' ', '') />
 ```
 
+***Fragments only***
+
+It may sometimes be desirable to have a template file which is just a collection of fragments
+which are not part of a larger piece or where the larger piece is defined separately.  
+```freemarker
+<#if FRAGMENT == 'fragment1'>
+    <@Fragment1 />
+<#elseif FRAGMENT == 'fragment2'>
+    <@Fragment2 />
+<#else>
+    <#stop 'Unknown or missing fragment identifier: "${FRAGMENT}"'>
+</#if>
+```
+or maybe just:
+```freemarker
+<@.vars[FRAGMENT] />
+```
+
 ## Running
 
 This is built using Spring Boot and so to start the server, either:
