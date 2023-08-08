@@ -91,6 +91,24 @@ or maybe just:
 <@.vars[FRAGMENT] />
 ```
 
+***Automating***  
+
+Rather than having to handle calling the correct fragment macro at the top of each page,you could use
+`Configuration.addAutoInclude` (or the setting `auto_include`) to reference a special template to be included at the
+beginning of each template. This could use a convention to look for a specifically named macro if a fragment is 
+not set.
+```freemarker
+<#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#elseif .vars["Page"]??><@Page /></#if>
+```
+Another option for the auto-included template is to contain a single macro which can be manually invoked by templates
+which use fragments. If you're considering that, it may be nicer to instead use `Configuration.setSharedVariable`
+and define a custom directive in Java (TemplateDirectiveModel).
+```freemarker
+<#macro autoInvoke primary=Page>
+    <#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#else><@primary /></#if>
+</#macro>
+```
+
 ## Running
 
 This is built using Spring Boot and so to start the server, either:
