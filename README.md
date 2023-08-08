@@ -104,8 +104,8 @@ Another option for the auto-included template is to contain a single macro which
 which use fragments. If you're considering that, it may be nicer to instead use `Configuration.setSharedVariable`
 and define a custom directive in Java (TemplateDirectiveModel).
 ```freemarker
-<#macro autoInvoke primary=Page>
-    <#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#else><@primary /></#if>
+<#macro autoInvoke primary=Page!>
+    <#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#elseif primary?has_content><@primary /></#if>
 </#macro>
 ```
 
