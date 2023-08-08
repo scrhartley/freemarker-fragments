@@ -105,7 +105,7 @@ which use fragments. If you're considering that, it may be nicer to instead use 
 and define a custom directive in Java (TemplateDirectiveModel).
 ```freemarker
 <#macro autoInvoke primary=Page!>
-    <#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#elseif primary?has_content><@primary /></#if>
+    <#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#else><@primary /></#if>
 </#macro>
 ```
 
