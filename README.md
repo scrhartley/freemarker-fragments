@@ -98,7 +98,7 @@ Rather than having to handle calling the correct fragment macro at the top of ea
 beginning of each template. This could use a convention to look for a specifically named macro if a fragment is 
 not set.
 ```freemarker
-<#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#elseif .vars["Page"]??><@Page /></#if>
+<#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#elseif Page??><@Page /></#if>
 ```
 Another option for the auto-included template is to contain a single macro which can be manually invoked by templates
 which use fragments. If you're considering that, it may be nicer to instead use `Configuration.setSharedVariable`
