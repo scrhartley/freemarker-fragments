@@ -102,7 +102,8 @@ not set.
 ```
 Another option for the auto-included template is to contain a single macro which can be manually invoked by templates
 which use fragments. If you're considering that, it may be nicer to instead use `Configuration.setSharedVariable`
-and define a custom directive in Java (TemplateDirectiveModel).
+and define a custom directive in Java
+(see [TemplateDirectiveModel](https://freemarker.apache.org/docs/pgui_datamodel_directive.html)).
 ```freemarker
 <#macro autoInvoke primary=Page!>
     <#if FRAGMENT?has_content><@.vars[FRAGMENT] /><#else><@primary /></#if>
