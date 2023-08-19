@@ -5,6 +5,13 @@ templating library. The main motivation to demonstrate this feature was to suppo
 [htmx fragments](https://htmx.org/essays/template-fragments/).
 
 
+### Spring Boot MVC
+
+The details in this doc refer to a general approach to implementing fragments with FreeMarker.
+For a more auto-magical approach which doesn't require anything special from the template,
+a Spring Boot MVC specific implementation can be found in [SPRING_BOOT_MVC.md](SPRING_BOOT_MVC.md).
+
+
 ### Macro components
 
 In order to do conditional rendering, macros are used in a component-like style
