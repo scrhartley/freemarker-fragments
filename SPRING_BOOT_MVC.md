@@ -25,8 +25,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.boot.autoconfigure.freemarker.FreeMarkerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,9 +33,7 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
-import freemarker.template.SimpleHash;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 @Configuration
 public class FreeMarkerConfig {
@@ -59,8 +55,8 @@ public class FreeMarkerConfig {
         String fragmentViewName;
 
         @Override
-        protected void processTemplate(Template template, SimpleHash model, HttpServletResponse response)
-                throws IOException, TemplateException {
+        protected Template getTemplate(String name, Locale locale) throws IOException {
+            Template template = super.getTemplate(name, locale);
             if (fragmentId != null) {
                 String macro = ESCAPE_CHARS.matcher(toMacroName(fragmentId)).replaceAll("\\\\$0");
                 String templateText =
@@ -74,7 +70,7 @@ public class FreeMarkerConfig {
                         template.getParserConfiguration(),
                         template.getEncoding());
             }
-            super.processTemplate(template, model, response);
+            return template;
         }
 
         // e.g. "my-fragment" to "MyFragment"
