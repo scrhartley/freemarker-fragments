@@ -5,7 +5,7 @@ templating library. The main motivation to demonstrate this feature was to suppo
 [htmx fragments](https://htmx.org/essays/template-fragments/).
 
 
-### Spring Boot MVC
+### What if Spring Boot MVC?
 
 The details in this doc refer to a general approach to implementing fragments with FreeMarker.
 For a more auto-magical approach which doesn't require anything special from the template,
