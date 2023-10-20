@@ -1,4 +1,4 @@
-package simon.examples.freemarker.fragments;
+package example.freemarker.fragments;
 
 public class Person {
     private final long id;

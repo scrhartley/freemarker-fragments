@@ -1,14 +1,16 @@
-package simon.examples.freemarker.fragments;
+package example.freemarker.fragments.manual;
+
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
+import example.freemarker.fragments.Person;
 
-@Controller
-@RequestMapping("table")
+@Controller("ManualTableController")
+@RequestMapping("/manual/table")
 public class TableController {
 
     @GetMapping
@@ -18,7 +20,7 @@ public class TableController {
                 new Person(2, "Paul George", "pg@gmail.com"),
                 new Person(3, "George John", "gj@gmail.com")
         ));
-        return "table";
+        return "manual/table";
     }
 
     @GetMapping("/row")
@@ -27,7 +29,7 @@ public class TableController {
                 new Person(3, "George John", "gj@gmail.com") );
 
         model.addAttribute("FRAGMENT", "row");
-        return "table";
+        return "manual/table";
     }
 
 }

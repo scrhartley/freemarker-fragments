@@ -1,4 +1,4 @@
-package simon.examples.freemarker.fragments;
+package example.freemarker.fragments;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
