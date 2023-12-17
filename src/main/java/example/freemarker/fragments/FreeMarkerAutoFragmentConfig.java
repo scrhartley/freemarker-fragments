@@ -118,7 +118,10 @@ public class FreeMarkerAutoFragmentConfig {
         },
 
         // This implementation will only execute the chosen macro, even if the base template has top level content
-        // that's not in a macro. The downside of this implementation is that it uses deprecated FreeMarker methods.
+        // that's not in a macro. One downside of this implementation is that it uses deprecated FreeMarker methods.
+        // Another is that since template-level include directives are not evaluated, macros in descendant templates
+        // may be unavailable to the fragment. Instead, either: prefer imports over includes, use include directives
+        // inside the fragment macro or make sure the required macros are defined in the template you are calling.
         FULLY_AUTOMATIC {
             @Override @SuppressWarnings("deprecation")
             Template build(String macroName, String viewName, Template baseTemplate) throws IOException {
