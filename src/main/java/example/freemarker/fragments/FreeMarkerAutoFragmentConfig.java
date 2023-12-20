@@ -141,7 +141,9 @@ public class FreeMarkerAutoFragmentConfig {
                 }
                 @SuppressWarnings("unchecked")
                 Collection<Macro> macros = (Collection<Macro>) baseTemplate.getMacros().values();
-                macros.forEach(fragmentTemplate::addMacro);
+                for (Macro macro : macros) {
+                    fragmentTemplate.addMacro(macro);
+                }
                 return fragmentTemplate;
             }
         };
