@@ -94,9 +94,9 @@ public class FreeMarkerAutoFragmentConfig {
     }
 
 
-    interface FragmentTemplate {
+    abstract static class FragmentTemplate {
 
-        Template build(String macroName, String viewName, Template baseTemplate) throws IOException;
+        abstract Template build(String macroName, String viewName, Template baseTemplate) throws IOException;
 
 
         // This implementation only writes the chosen macro's output to the page,
@@ -108,7 +108,7 @@ public class FreeMarkerAutoFragmentConfig {
         //    Perhaps this could be enhanced to verify the default macro exists in the base template
         //    when a fragment identifier isn't specified (falling back to the full template) and hence allow
         //    non-fragment templates to not be forced to have top level content be in a macro.
-        class SemiAutomatic implements FragmentTemplate {
+        static class SemiAutomatic extends FragmentTemplate {
             @Override
             public Template build(String macroName, String viewName, Template baseTemplate) throws IOException {
                 final String namespace = "$__auto_invoke__$";
@@ -124,7 +124,7 @@ public class FreeMarkerAutoFragmentConfig {
         // Another is that since template-level include directives are not evaluated, macros in descendant templates
         // may be unavailable to the fragment. Instead, either: prefer imports over includes, use include directives
         // inside the fragment macro or make sure the required macros are defined in the template you are calling.
-        class FullyAutomatic implements FragmentTemplate {
+        static class FullyAutomatic extends FragmentTemplate {
             private static final boolean INCLUDE_TEMPLATE_IMPORTS_IN_FRAGMENT = true;
             private static final boolean FORCE_LAZY_IMPORTS_IN_FRAGMENT = true;
 
@@ -166,7 +166,7 @@ public class FreeMarkerAutoFragmentConfig {
                     return null;
                 }
             }
-        };
+        }
 
 
         private static Template newTemplate(
