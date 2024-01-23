@@ -149,7 +149,7 @@ http://127.0.0.1:8080/manual/fragment
 Page with a table and also a single row as a fragment.  
 A single row's HTML would be useful when the client wants to add a completely new row.
 You can easily get the same HTML as for when you're rendering the whole table, without having to specify it more than
-once and then needing to keep both versions in sync.
+once and then needing to keep both versions in sync.  
 http://127.0.0.1:8080/auto/table  
 http://127.0.0.1:8080/auto/table/row  
 http://127.0.0.1:8080/manual/table  
