@@ -37,7 +37,7 @@ public class FreeMarkerAutoFragmentConfig {
 
 
     static class CustomFreeMarkerView extends FreeMarkerView {
-        private static final Pattern ESCAPE_CHARS = Pattern.compile("[-.@]");
+        private static final Pattern ESCAPE_CHARS = Pattern.compile("[-.:#]");
         String fragmentId;
         String fragmentViewName;
 
