@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/auto")
 public class BasicController {
 
-    @GetMapping("/")
+    @GetMapping
     public String getPage(Model model) {
         return "auto/basic_page";
     }
