@@ -1,5 +1,7 @@
 package example.freemarker.fragments;
 
+import static freemarker.template.Configuration.*;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Collection;
@@ -29,9 +31,13 @@ abstract class FragmentTemplate {
         @Override
         public Template build(String macroName, String viewName, Template baseTemplate) throws IOException {
             final String namespace = "$__auto_invoke__$";
+            boolean squareBrackets = baseTemplate.getActualTagSyntax() == SQUARE_BRACKET_TAG_SYNTAX;
+            char tagStart = squareBrackets ? '[' : '<';
+            char tagEnd   = squareBrackets ? ']' : '>';
+
             String templateText =
-                    "<#import \"/" + baseTemplate.getName() + "\" as " + namespace + ">" +
-                            "<@" + namespace + "." + escape(macroName) + " />";
+                    tagStart + "#import \"/" + baseTemplate.getName() + "\" as " + namespace + tagEnd +
+                            tagStart + "@" + namespace + "." + escape(macroName) + " /" + tagEnd;
             return newTemplate(templateText, viewName, baseTemplate);
         }
     }
@@ -48,7 +54,10 @@ abstract class FragmentTemplate {
         @Override
         @SuppressWarnings("deprecation")
         public Template build(String macroName, String viewName, Template baseTemplate) throws IOException {
-            String templateText = "<@" + escape(macroName) + " />";
+            boolean squareBrackets = baseTemplate.getActualTagSyntax() == SQUARE_BRACKET_TAG_SYNTAX;
+            String templateText = squareBrackets
+                    ? "[@" + escape(macroName) + " /]"
+                    : "<@" + escape(macroName) + " />";
             if (INCLUDE_TEMPLATE_IMPORTS_IN_FRAGMENT) {
                 StringBuilder builder = extractImports(baseTemplate);
                 if (builder != null) {
@@ -75,9 +84,14 @@ abstract class FragmentTemplate {
             @SuppressWarnings("unchecked")
             Collection<LibraryLoad> imports = (Collection<LibraryLoad>) template.getImports();
             if (!imports.isEmpty()) {
+                int tagSyntax = template.getActualTagSyntax();
                 StringBuilder builder = new StringBuilder();
                 for (LibraryLoad ll : imports) {
-                    builder.append(ll.getCanonicalForm());
+                    if (tagSyntax == SQUARE_BRACKET_TAG_SYNTAX) {
+                        builder.append('[').append(ll.getDescription()).append("/]");
+                    } else {
+                        builder.append(ll.getCanonicalForm());
+                    }
                 }
                 return builder;
             } else {

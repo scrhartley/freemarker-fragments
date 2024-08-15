@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
@@ -66,6 +67,26 @@ public class FullAutoTest extends FreeMarkerTest {
                 imported macro 1
                 macro calling nested last line
                 local macro 1 last line""";
+        assertEquals(expected, process(fragment));
+    }
+
+    @Test
+    public void testAutoFragmentSquareBrackets() throws TemplateException, IOException {
+        Configuration config = newConfiguration();
+        config.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
+
+        Template template = config.getTemplate("/templates/autoFragmentSquareBrackets.ftlh");
+        String expected = """
+                first line
+                macro 2
+                imported macro 3
+                last line""";
+        assertEquals(expected, process(template));
+
+        Template fragment = fragmentTemplate("Macro1", template);
+        expected = """
+                macro 1
+                imported macro 3""";
         assertEquals(expected, process(fragment));
     }
 

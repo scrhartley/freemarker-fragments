@@ -28,7 +28,7 @@ abstract class FreeMarkerTest {
         return CONFIG.getTemplate(name);
     }
 
-    private static Configuration newConfiguration() {
+    protected static Configuration newConfiguration() {
         Version version = Configuration.VERSION_2_3_32;
 
         Configuration cfg = new Configuration(version);
