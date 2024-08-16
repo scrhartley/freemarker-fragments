@@ -37,7 +37,7 @@ abstract class FragmentTemplate {
 
             String templateText =
                     tagStart + "#import \"/" + baseTemplate.getName() + "\" as " + namespace + tagEnd +
-                            tagStart + "@" + namespace + "." + escape(macroName) + " /" + tagEnd;
+                    tagStart + "@" + namespace + "." + escape(macroName) + " /" + tagEnd;
             return newTemplate(templateText, viewName, baseTemplate);
         }
     }
