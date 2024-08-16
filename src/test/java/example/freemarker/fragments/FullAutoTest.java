@@ -90,10 +90,38 @@ public class FullAutoTest extends FreeMarkerTest {
         assertEquals(expected, process(fragment));
     }
 
+    @Test
+    public void testAutoPreFragmentMacro() throws TemplateException, IOException {
+        final String preFragmentMacro = "Fragment-Init_Macro"; // Escaped by builder
+        var fragmentBuilder = new FragmentTemplate.FullyAutomatic(preFragmentMacro);
+
+        // Check there's no problems when special macro is not defined
+        Template template = getTemplate("/templates/autoFragment.ftlh");
+        Template fragment = fragmentTemplate("Macro2", template, fragmentBuilder);
+        assertEquals("macro 2", process(fragment));
+
+        template = getTemplate("/templates/autoFragmentPreMacro.ftlh");
+        assertEquals("default content", process(template));
+
+        fragment = fragmentTemplate("Macro1", template, fragmentBuilder);
+        String expected = """
+                init macro about to call auto-imported lib macro
+                imported macro 2
+                
+                macro included in init macro about to be called in fragment macro
+                imported macro 1
+                
+                macro 1""";
+        assertEquals(expected, process(fragment));
+    }
+
 
     private static Template fragmentTemplate(String macroName, Template baseTemplate) throws IOException {
+        return fragmentTemplate(macroName, baseTemplate, FRAGMENT_TEMPLATE_BUILDER);
+    }
+    private static Template fragmentTemplate(String macroName, Template baseTemplate, FragmentTemplate builder) throws IOException {
         String fragmentViewName = baseTemplate.getName() + " :: " + macroName;
-        return FRAGMENT_TEMPLATE_BUILDER.build(macroName, fragmentViewName, baseTemplate);
+        return builder.build(macroName, fragmentViewName, baseTemplate);
     }
 
 }

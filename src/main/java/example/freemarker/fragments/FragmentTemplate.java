@@ -45,26 +45,30 @@ abstract class FragmentTemplate {
     // This implementation will only execute the chosen macro, even if the base template has top level content
     // that's not in a macro. One downside of this implementation is that it uses deprecated FreeMarker methods.
     // Another is that since template-level include directives are not evaluated, macros in descendant templates
-    // may be unavailable to the fragment. Instead, either: prefer imports over includes, use include directives
-    // inside the fragment macro or make sure the required macros are defined in the template you are calling.
+    // may be unavailable to the fragment.
+    // Instead, either:
+    //  * prefer imports over includes
+    //  * use include directives inside the fragment macro
+    //  * define macro-only includes in the preFragmentAutoMacro
+    //  * make sure the required macros are defined in the template you are calling.
     static class FullyAutomatic extends FragmentTemplate {
         private static final boolean INCLUDE_TEMPLATE_IMPORTS_IN_FRAGMENT = true;
         private static final boolean FORCE_LAZY_IMPORTS_IN_FRAGMENT = true;
+        private final String preFragmentAutoMacro;
+
+        public FullyAutomatic() {
+            this(null);
+        }
+        public FullyAutomatic(String autoCallMacro) {
+            this.preFragmentAutoMacro =
+                    (autoCallMacro == null) ? null : escape(autoCallMacro);
+        }
 
         @Override
         @SuppressWarnings("deprecation")
         public Template build(String macroName, String viewName, Template baseTemplate) throws IOException {
-            boolean squareBrackets = baseTemplate.getActualTagSyntax() == SQUARE_BRACKET_TAG_SYNTAX;
-            String templateText = squareBrackets
-                    ? "[@" + escape(macroName) + " /]"
-                    : "<@" + escape(macroName) + " />";
-            if (INCLUDE_TEMPLATE_IMPORTS_IN_FRAGMENT) {
-                StringBuilder builder = extractImports(baseTemplate);
-                if (builder != null) {
-                    builder.append(templateText);
-                    templateText = builder.toString();
-                }
-            }
+            String templateText = buildTemplateText(macroName, baseTemplate);
+
             Template fragmentTemplate = newTemplate(templateText, viewName, baseTemplate);
             if (INCLUDE_TEMPLATE_IMPORTS_IN_FRAGMENT && FORCE_LAZY_IMPORTS_IN_FRAGMENT) {
                 // If we're including the base template's imports, then it becomes
@@ -80,23 +84,40 @@ abstract class FragmentTemplate {
         }
 
         @SuppressWarnings("deprecation")
-        private static StringBuilder extractImports(Template template) {
-            @SuppressWarnings("unchecked")
-            Collection<LibraryLoad> imports = (Collection<LibraryLoad>) template.getImports();
-            if (!imports.isEmpty()) {
-                int tagSyntax = template.getActualTagSyntax();
-                StringBuilder builder = new StringBuilder();
+        private String buildTemplateText(String macroName, Template baseTemplate) {
+            StringBuilder builder = new StringBuilder();
+            boolean squareBrackets = baseTemplate.getActualTagSyntax() == SQUARE_BRACKET_TAG_SYNTAX;
+
+            if (INCLUDE_TEMPLATE_IMPORTS_IN_FRAGMENT) {
+                @SuppressWarnings("unchecked")
+                Collection<LibraryLoad> imports = (Collection<LibraryLoad>) baseTemplate.getImports();
                 for (LibraryLoad ll : imports) {
-                    if (tagSyntax == SQUARE_BRACKET_TAG_SYNTAX) {
+                    if (squareBrackets) {
                         builder.append('[').append(ll.getDescription()).append("/]");
                     } else {
                         builder.append(ll.getCanonicalForm());
                     }
                 }
-                return builder;
-            } else {
-                return null;
             }
+            if (preFragmentAutoMacro != null) {
+                // Perhaps this could be enhanced to optionally swallow any generated content.
+                if (squareBrackets) {
+                    builder.append("[#if ").append(preFragmentAutoMacro).append("??]");
+                    builder.append("[@").append(preFragmentAutoMacro).append(" /]");
+                    builder.append("[/#if]");
+                } else {
+                    builder.append("<#if ").append(preFragmentAutoMacro).append("??>");
+                    builder.append("<@").append(preFragmentAutoMacro).append(" />");
+                    builder.append("</#if>");
+                }
+            }
+            if (squareBrackets) {
+                builder.append("[@").append(escape(macroName)).append(" /]");
+            } else {
+                builder.append("<@").append(escape(macroName)).append(" />");
+            }
+
+            return builder.toString();
         }
     }
 
