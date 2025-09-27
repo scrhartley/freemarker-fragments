@@ -59,7 +59,7 @@ This is built using Spring Boot and so to start the server, either:
 - in your IDE, run the `main` method in `FreeMarkerFragmentsApplication`
 - as standalone:
   - either use `./mvnw spring-boot:run`
-  - or, build the project using `./mvnw clean install` and then run the jar `java -jar target/fragments.jar`
+  - or, build the project using `./mvnw clean package` and then run the jar `java -jar target/fragments.jar`
 
 ***Pages***  
 The same pages exist for both implementations under `/auto` and `/manual`.  
